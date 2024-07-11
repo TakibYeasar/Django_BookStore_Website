@@ -62,5 +62,3 @@ class TestProductsModel(TestCase):
         """
         data = Product.products.all()
         self.assertEqual(data.count(), 1)
-
-
