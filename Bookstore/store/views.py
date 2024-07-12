@@ -4,7 +4,7 @@ from .models import Category, Product
 
 def product_all(request):
     products = Product.products.all()
-    return render(request, 'store/home.html', {'products': products})
+    return render(request, 'store/index.html', {'products': products})
 
 
 def category_list(request, category_slug=None):

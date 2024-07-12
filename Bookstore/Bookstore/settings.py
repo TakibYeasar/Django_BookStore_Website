@@ -146,6 +146,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 LOGIN_REDIRECT_URL = '/account/dashboard'
 LOGIN_URL = '/account/login/'
 
+# Basket session ID
+BASKET_SESSION_ID = 'basket'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
