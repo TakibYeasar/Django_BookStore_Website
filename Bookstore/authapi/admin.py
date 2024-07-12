@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import CustomUser, Address
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 
@@ -31,7 +31,5 @@ class CustomUserAdmin(BaseUserAdmin):
     filter_horizontal = []
 
 
-admin.site.register(
-    CustomUser,
-    CustomUserAdmin,
-)
+admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Address)

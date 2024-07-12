@@ -5,24 +5,39 @@
 <form class="account-form" action="{% url 'account:login' %}" method="post">
   {% csrf_token %}
   <h3 class="mb-4">Sign In</h3>
+  
   {% if form.errors %}
   <div class="alert alert-primary" role="alert">
     Error: Username or Password not correct!
   </div>
   {% endif %}
-  <label class="form-label">{{ form.username.label}}</label>
-  {{ form.username}}
-  <label class="form-label">{{ form.password.label}}</label>
-  {{ form.password}}
+  
+  <div class="mb-3">
+    <label for="id_username" class="form-label">{{ form.username.label }}</label>
+    {{ form.username }}
+  </div>
+  
+  <div class="mb-3">
+    <label for="id_password" class="form-label">{{ form.password.label }}</label>
+    {{ form.password }}
+  </div>
+  
   <div class="d-grid gap-2">
     <input type="hidden" name="next" value="{{ next }}">
-    <button class="btn btn-primary py-2 mb-4 mt-5 fw-bold" type="submit" value="Log-in">Sign in
-    </button>
+    <button class="btn btn-primary py-2 mb-4 mt-5 fw-bold" type="submit">Sign in</button>
   </div>
+  
   <div class="flex-column justify-content-center mx-auto pb-3">
-    <div class="text-center"><a href="{% url "account:register" %}">Create an account</a></div>
-    <div class="text-center"><a href="{% url "account:pwdreset" %}">Forgotten Password?</a></div>
+    <div class="text-center"><a href="{% url 'account:register' %}">Create an account</a></div>
+    <div class="text-center"><a href="{% url 'account:pwdreset' %}">Forgotten Password?</a></div>
   </div>
 </form>
+
+<script>
+  // Example jQuery script (for demonstration purposes)
+  $(document).ready(function () {
+    // Add your jQuery logic here if needed
+  });
+</script>
 
 {% endblock %}

@@ -17,6 +17,11 @@ coverage = "^7.5.4"
 flake8 = "^7.1.0"
 django-countries = "^7.6.1"
 stripe = "^10.3.0"
+black = "^24.4.2"
+isort = "^5.13.2"
+django-debug-toolbar = "^4.4.6"
+django-mptt = "^0.16.0"
+paypal-checkout-serversdk = "^1.0.3"
 
 
 [build-system]

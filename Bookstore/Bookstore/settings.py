@@ -163,5 +163,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # SECRET_KEY = ''
 # STRIPE_ENDPOINT_SECRET = ''
 # stripe listen --forward-to localhost:8000/payment/webhook/
-
-

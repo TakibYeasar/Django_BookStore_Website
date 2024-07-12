@@ -5,8 +5,8 @@ app_name = 'orders'
 
 urlpatterns = [
     path('add/', views.add, name='add'),
-    path('', views.BasketView, name='basket'),
+    path('', views.basket_view, name='basket'),
     path('orderplaced/', views.order_placed, name='order_placed'),
-    path('error/', views.Error.as_view(), name='error'),
-    path('webhook/', views.stripe_webhook),
+    path('error/', views.ErrorView.as_view(), name='error'),
+    path('webhook/', views.stripe_webhook, name='stripe_webhook'),
 ]

@@ -1,6 +1,8 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django_countries.fields import CountryField
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomManager(BaseUserManager):
@@ -87,7 +89,8 @@ class CustomUser(AbstractBaseUser):
         return True
 
 
-class UserProfile(models.Model):
+class Address(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     about_user = models.TextField(
@@ -96,12 +99,23 @@ class UserProfile(models.Model):
         verbose_name="Address", max_length=512, blank=True, null=True)
     address_two = models.CharField(
         verbose_name="Address", max_length=512, blank=True, null=True)
+    postcode = models.CharField(_("Postcode"), max_length=50)
     city = models.CharField(max_length=32, blank=True, null=True)
     state = models.CharField(max_length=32, blank=True, null=True)
     country = CountryField()
     phone = models.CharField(max_length=32, blank=True)
+    delivery_instructions = models.CharField(
+        _("Delivery Instructions"), max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
+    default = models.BooleanField(_("Default"), default=False)
+    
+    class Meta:
+        verbose_name = "Address"
+        verbose_name_plural = "Addresses"
 
     def __str__(self):
-        return self.user.email
+        return "{} Address".format(self.user.email)
+
 
