@@ -7,7 +7,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('store.urls', namespace='store')),
     path('basket/', include('basket.urls', namespace='basket')),
-    path('account/', include('authapi.urls', namespace='account')),
+    path('authapi/', include('authapi.urls', namespace='authapi')),
+    path('cart/', include('cart.urls', namespace='cart')),
 ]
 
 if settings.DEBUG:

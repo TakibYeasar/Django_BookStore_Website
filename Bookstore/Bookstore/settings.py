@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'authapi',
     'store',
     'basket',
+    'cart',
+    'checkout',
 ]
 
 AUTH_USER_MODEL = 'authapi.CustomUser'
@@ -152,4 +154,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email setting
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Stripe Payment
+# PUBLISHABLE_KEY = ''
+# SECRET_KEY = ''
+# STRIPE_ENDPOINT_SECRET = ''
+# stripe listen --forward-to localhost:8000/payment/webhook/
+
 
