@@ -16,6 +16,7 @@ python-dotenv = "^1.0.1"
 coverage = "^7.5.4"
 flake8 = "^7.1.0"
 django-countries = "^7.6.1"
+stripe = "^10.3.0"
 
 
 [build-system]
