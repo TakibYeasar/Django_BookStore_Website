@@ -93,21 +93,27 @@
 </div>
 
 <script>
-  // Delete Item
-  $(document).on("click", ".delete-button", function (e) {
-    e.preventDefault();
-    var prodid = $(this).data("index");
-    $.ajax({
-      type: "POST",
-      url: '{% url "basket:basket_delete" %}',
-      data: {
-        productid: $(this).data("index"),
-        csrfmiddlewaretoken: "{{ csrf_token }}",
-        action: "post",
-      },
-      success: function (json) {
-        $('.product-item[data-index="' + prodid + '"]').remove();
+  document.addEventListener("click", function(e) {
+    if (e.target && e.target.classList.contains("delete-button")) {
+      e.preventDefault();
+      const prodid = e.target.getAttribute("data-index");
+      
+      fetch('{% url "basket:basket_delete" %}', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+          productid: prodid,
+          action: "post"
+        })
+      })
+      .then(response => response.json())
+      .then(json => {
+        document.querySelector('.product-item[data-index="' + prodid + '"]').remove();
 
+        let total, subtotal;
         if (json.qty == 0) {
           total = 0;
           subtotal = 0;
@@ -119,33 +125,40 @@
         document.getElementById("subtotal").innerHTML = subtotal;
         document.getElementById("basket-qty").innerHTML = json.qty;
         document.getElementById("total").innerHTML = total;
-      },
-      error: function (xhr, errmsg, err) {},
-    });
+      })
+      .catch(error => console.error('Error:', error));
+    }
   });
 
-  // Update Item
-  $(document).on("click", ".update-button", function (e) {
-    e.preventDefault();
-    var prodid = $(this).data("index");
-    $.ajax({
-      type: "POST",
-      url: '{% url "basket:basket_update" %}',
-      data: {
-        productid: $(this).data("index"),
-        productqty: $("#select" + prodid + " option:selected").text(),
-        csrfmiddlewaretoken: "{{ csrf_token }}",
-        action: "post",
-      },
-      success: function (json) {
-        total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
+  document.addEventListener("click", function(e) {
+    if (e.target && e.target.classList.contains("update-button")) {
+      e.preventDefault();
+      const prodid = e.target.getAttribute("data-index");
+      const productQty = document.querySelector("#select" + prodid + " option:selected").text;
+
+      fetch('{% url "basket:basket_update" %}', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+          productid: prodid,
+          productqty: productQty,
+          action: "post"
+        })
+      })
+      .then(response => response.json())
+      .then(json => {
+        const total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
         document.getElementById("basket-qty").innerHTML = json.qty;
         document.getElementById("subtotal").innerHTML = json.subtotal;
         document.getElementById("total").innerHTML = total;
-      },
-      error: function (xhr, errmsg, err) {},
-    });
+      })
+      .catch(error => console.error('Error:', error));
+    }
   });
 </script>
+
 
 {% endblock %}

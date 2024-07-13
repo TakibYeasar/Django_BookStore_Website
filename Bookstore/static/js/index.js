@@ -1,76 +1,77 @@
-//'use strict';
+'use strict';
 
+const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
 
-var stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-
-var elem = document.getElementById('submit');
-clientsecret = elem.getAttribute('data-secret');
+const elem = document.getElementById('submit');
+const clientsecret = elem.getAttribute('data-secret');
 
 // Set up Stripe.js and Elements to use in checkout form
-var elements = stripe.elements();
-var style = {
-base: {
-  color: "#000",
-  lineHeight: '2.4',
-  fontSize: '16px'
-}
+const elements = stripe.elements();
+const style = {
+  base: {
+    color: "#000",
+    lineHeight: '2.4',
+    fontSize: '16px'
+  }
 };
 
-
-var card = elements.create("card", { style: style });
+const card = elements.create("card", { style: style });
 card.mount("#card-element");
 
-card.on('change', function(event) {
-var displayError = document.getElementById('card-errors')
-if (event.error) {
-  displayError.textContent = event.error.message;
-  $('#card-errors').addClass('alert alert-info');
-} else {
-  displayError.textContent = '';
-  $('#card-errors').removeClass('alert alert-info');
-}
+card.on('change', (event) => {
+  const displayError = document.getElementById('card-errors');
+  if (event.error) {
+    displayError.textContent = event.error.message;
+    displayError.classList.add('alert', 'alert-info');
+  } else {
+    displayError.textContent = '';
+    displayError.classList.remove('alert', 'alert-info');
+  }
 });
 
-var form = document.getElementById('payment-form');
+const form = document.getElementById('payment-form');
 
-form.addEventListener('submit', function(ev) {
-ev.preventDefault();
+form.addEventListener('submit', (ev) => {
+  ev.preventDefault();
 
-var custName = document.getElementById("custName").value;
-var custAdd = document.getElementById("custAdd").value;
-var custAdd2 = document.getElementById("custAdd2").value;
-var postCode = document.getElementById("postCode").value;
+  const custName = document.getElementById("custName").value;
+  const custAdd = document.getElementById("custAdd").value;
+  const custAdd2 = document.getElementById("custAdd2").value;
+  const postCode = document.getElementById("postCode").value;
 
-
-  $.ajax({
-    type: "POST",
-    url: 'http://127.0.0.1:8000/orders/add/',
-    data: {
-      order_key: clientsecret,
-      csrfmiddlewaretoken: CSRF_TOKEN,
-      action: "post",
+  fetch('http://127.0.0.1:8000/orders/add/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': CSRF_TOKEN
     },
-    success: function (json) {
-      console.log(json.success)
+    body: JSON.stringify({
+      order_key: clientsecret,
+      action: "post"
+    })
+  })
+    .then(response => response.json())
+    .then(json => {
+      console.log(json.success);
 
       stripe.confirmCardPayment(clientsecret, {
         payment_method: {
           card: card,
           billing_details: {
-            address:{
-                line1:custAdd,
-                line2:custAdd2
+            address: {
+              line1: custAdd,
+              line2: custAdd2
             },
             name: custName
-          },
+          }
         }
-      }).then(function(result) {
+      }).then(result => {
         if (result.error) {
-          console.log('payment error')
+          console.log('payment error');
           console.log(result.error.message);
         } else {
           if (result.paymentIntent.status === 'succeeded') {
-            console.log('payment processed')
+            console.log('payment processed');
             // There's a risk of the customer closing the window before callback
             // execution. Set up a webhook or plugin to listen for the
             // payment_intent.succeeded event that handles any business critical
@@ -79,11 +80,8 @@ var postCode = document.getElementById("postCode").value;
           }
         }
       });
-
-    },
-    error: function (xhr, errmsg, err) {},
-  });
-
-
-
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 });

@@ -1,7 +1,7 @@
 {% extends "../base.html" %}
 {% load static %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'store/css/store.css' %}">
+<link rel="stylesheet" href="{% static 'css/store.css' %}">
 {% endblock %}
 {% block title %}
 {% if product %}{{ product.title }}{% else %}Product{% endif %}
@@ -62,25 +62,37 @@
   </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+0xKl+LL2D/Bu5jOQ5ie00fDqiv6zvPsy4D9T0Q" crossorigin="anonymous"></script>
 <script>
-  $(document).on('click', '#add-button', function(e) {
-    e.preventDefault();
-    $.ajax({
-      type: 'POST',
-      url: '{% url "basket:basket_add" %}',
-      data: {
-        productid: $('#add-button').val(),
-        productqty: $('#select option:selected').text(),
-        csrfmiddlewaretoken: "{{ csrf_token }}",
-        action: 'post'
-      },
-      success: function(json) {
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'add-button') {
+      e.preventDefault();
+      
+      const productId = document.getElementById('add-button').value;
+      const productQty = document.getElementById('select').selectedOptions[0].text;
+      const csrfToken = "{{ csrf_token }}";
+      
+      fetch('{% url "basket:basket_add" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+          productid: productId,
+          productqty: productQty,
+          action: 'post'
+        })
+      })
+      .then(response => response.json())
+      .then(json => {
         document.getElementById("basket-qty").innerHTML = json.qty;
-      },
-      error: function(xhr, errmsg, err) {}
-    });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
   });
 </script>
+
 
 {% endblock %}

@@ -66,27 +66,38 @@
   </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function () {
-    $('input[type=radio][name=deliveryOption]').on('change', function (e) {
-      e.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: '{% url "checkout:basket_update_delivery" %}',
-        data: {
-          deliveryoption: $(this).val(),
-          csrfmiddlewaretoken: "{{ csrf_token }}",
-          action: "post",
-        },
-        success: function (json) {
-          $('#total').text(json.total);
-          $('#delivery_price').text(json.delivery_price);
-        },
-        error: function (xhr, errmsg, err) {},
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[type=radio][name=deliveryOption]').forEach(function(radio) {
+      radio.addEventListener('change', function (e) {
+        e.preventDefault();
+        
+        const deliveryOption = this.value;
+        const csrfToken = "{{ csrf_token }}";
+
+        fetch('{% url "checkout:basket_update_delivery" %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify({
+            deliveryoption: deliveryOption,
+            action: "post"
+          })
+        })
+        .then(response => response.json())
+        .then(json => {
+          document.getElementById('total').innerText = json.total;
+          document.getElementById('delivery_price').innerText = json.delivery_price;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
       });
     });
   });
 </script>
+
 
 {% endblock %}

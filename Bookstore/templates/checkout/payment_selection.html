@@ -35,15 +35,14 @@
   </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=GBP" data-sdk-integration-source="button-factory"></script>
 <script>
   function getCookie(name) {
-    var cookieValue = null;
+    let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i].trim();
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
         if (cookie.substring(0, name.length + 1) === (name + '=')) {
           cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
           break;
@@ -52,8 +51,8 @@
     }
     return cookieValue;
   }
-  
-  var csrftoken = getCookie('csrftoken');
+
+  const csrftoken = getCookie('csrftoken');
 
   function initPayPalButton() {
     paypal.Buttons({
@@ -74,11 +73,11 @@
         });
       },
       onApprove: function(data, actions) {
-        var url = "{% url 'checkout:payment_complete' %}";
+        const url = "{% url 'checkout:payment_complete' %}";
         return fetch(url, {
           method: 'POST',
           headers: {
-            'content-type': 'application/json',
+            'Content-Type': 'application/json',
             'X-CSRFToken': csrftoken,
           },
           body: JSON.stringify({
@@ -90,8 +89,9 @@
       },
     }).render('#paypal-button-container');
   }
-  
-  initPayPalButton();
+
+  document.addEventListener('DOMContentLoaded', initPayPalButton);
 </script>
+
 
 {% endblock %}

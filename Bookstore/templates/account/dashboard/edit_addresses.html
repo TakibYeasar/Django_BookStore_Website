@@ -45,10 +45,11 @@
 
 <script>
   function submitForm() {
-    var form = document.getElementsByName('address_form')[0];
+    const form = document.querySelector('form[name="address_form"]');
     form.submit(); // Submit the form
     form.reset();  // Reset all form data
     return false;  // Prevent page refresh
   }
 </script>
+
 {% endblock %}

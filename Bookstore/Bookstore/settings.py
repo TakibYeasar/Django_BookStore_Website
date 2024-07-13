@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
+    "crispy_forms",
+    "crispy_bootstrap5",
     'django_countries',
     'authapi',
     'store',
@@ -51,10 +54,15 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'authapi.CustomUser'
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -163,3 +171,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # SECRET_KEY = ''
 # STRIPE_ENDPOINT_SECRET = ''
 # stripe listen --forward-to localhost:8000/payment/webhook/
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+]
+
